@@ -3,12 +3,11 @@
 #include <iostream>
 
 using namespace std;
-typedef int vert;
 
 class EdgeNode{
 public:
-    EdgeNode(vert newVertex, EdgeNode* newNext):vertex(newVertex),next(newNext){} // Construtor 
-    vert getVertex(){
+    EdgeNode(int newVertex, EdgeNode* newNext):vertex(newVertex),next(newNext){} // Construtor 
+    int getVertex(){
         return vertex;
     }
     EdgeNode* getNext(){
@@ -18,7 +17,7 @@ public:
         next = newNext;
     }
 private:
-    vert vertex;
+    int vertex;
     EdgeNode* next;
 };
 
@@ -32,9 +31,10 @@ public:
     GraphAdjList(int numVert); // Construtor
     ~GraphAdjList(); // Desconstrutor
     // Definindo métodos
-    bool hasEdge(vert v1, vert v2);
-    void addEdge(vert v1, vert v2);
-    void removeEdge(vert v1, vert v2);
+    bool hasEdge(int v1, int v2);
+    void addEdgeFinal(int v1, int v2);
+    void addEdge(int v1, int v2);
+    void removeEdge(int v1, int v2);
     void printEdges();
     void printAdjList();
     int getNumVertex();
@@ -46,14 +46,14 @@ public:
 GraphAdjList::GraphAdjList(int numVert):numVertex(numVert),numEdge(0),edges(nullptr){
     edges = new EdgeNode*[numVert]; // Criando uma linked list vazia para cada vertice
     numEdgeVertex = new int[numVert];
-    for(vert v=0; v<numVert; v++){
+    for(int v=0; v<numVert; v++){
         getNumEdgeVertex()[v]=0;
         edges[v] = nullptr; // Cada vértice recebe uma linked list vazia
     }
 } 
 
 GraphAdjList::~GraphAdjList(){
-    for(vert v=0; v<numVertex;v++){
+    for(int v=0; v<numVertex;v++){
         EdgeNode* edge = edges[v];
         while(edge!=nullptr){
             EdgeNode* next = edge->getNext();
@@ -64,7 +64,7 @@ GraphAdjList::~GraphAdjList(){
     }
 } 
 
-bool GraphAdjList::hasEdge(vert v1, vert v2){
+bool GraphAdjList::hasEdge(int v1, int v2){
     EdgeNode* edge = edges[v1]; // O primeiro elemento dessa lista encadeada, já é um vértice associado a uma aresta
     while(edge!=nullptr){
         if(edge->getVertex()==v2){
@@ -76,15 +76,40 @@ bool GraphAdjList::hasEdge(vert v1, vert v2){
     }
     return false;
 }
-void GraphAdjList::addEdge(vert v1, vert v2){
+void GraphAdjList::addEdgeFinal(int v1, int v2){
+    // Adiciona uma aresta entre v1 e v2, uma aresta que saí de v1 e chega em v2, adiciona no final da lista
+    EdgeNode* edge=edges[v1];
     if(hasEdge(v1,v2)){
         return;
     }
-    edges[v1] = new EdgeNode(v2,edges[v1]); // Adcionando elemento no começo da linked list
+    EdgeNode* newEdge;
+    newEdge = new EdgeNode(v2,nullptr);
+    if(edge!=nullptr){
+        while(edge->getNext()!=nullptr){
+            edge = edge->getNext();
+        }
+        edge->setNext(newEdge);
+    }
+    else{
+        edges[v1] = newEdge;
+    }
     numEdgeVertex[v1]++;
     numEdge++; 
 }
-void GraphAdjList::removeEdge(vert v1, vert v2){
+
+void GraphAdjList::addEdge(int v1, int v2){
+    // Adiciona uma aresta entre v1 e v2, uma aresta que saí de v1 e chega em v2, no começo
+    if(hasEdge(v1,v2)){
+        return;
+    }
+    EdgeNode* newEdge;
+    newEdge = new EdgeNode(v2,edges[v1]);
+    edges[v1]=newEdge;
+    numEdgeVertex[v1]++;
+    numEdge++; 
+}
+
+void GraphAdjList::removeEdge(int v1, int v2){
     EdgeNode* edge = edges[v1];
     EdgeNode* previousEdge = nullptr;
     if(not hasEdge(v1,v2)){

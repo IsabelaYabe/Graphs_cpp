@@ -3,7 +3,6 @@
 #include <iostream>
 
 using namespace std;
-typedef int vert;
 
 class GraphMatrix{
 private:
@@ -14,9 +13,9 @@ public:
     GraphMatrix(int numVert); // Construtor
     ~GraphMatrix(); // Desconstrutor
     // Definindo métodos
-    bool hasEdge(vert v1, vert v2);
-    void addEdge(vert v1, vert v2);
-    void removeEdge(vert v1, vert v2);
+    bool hasEdge(int v1, int v2);
+    void addEdge(int v1, int v2);
+    void removeEdge(int v1, int v2);
     void printEdges();
     void printMatrix();
     int getNumVertex();
@@ -30,7 +29,7 @@ GraphMatrix::GraphMatrix(int numVert):numVertex(numVert), numEdge(0), adjMatrix(
     // Inserindo valores bool (false)
     for(int i=0; i<numVertex; i++){
         adjMatrix[i]= new bool[numVertex];
-        for (vert j=0; j<numVertex; j++){
+        for (int j=0; j<numVertex; j++){
             adjMatrix[i][j]=false;
         }
     }
@@ -43,18 +42,18 @@ GraphMatrix::~GraphMatrix(){
     delete[] adjMatrix;
 }
 
-bool GraphMatrix::hasEdge(vert v1, vert v2){
+bool GraphMatrix::hasEdge(int v1, int v2){
     return adjMatrix[v1][v2];
 }
 
-void GraphMatrix::addEdge(vert v1, vert v2){
+void GraphMatrix::addEdge(int v1, int v2){
     if (!hasEdge(v1,v2)){
         adjMatrix[v1][v2] = true;
         numEdge++;
     }
 }
 
-void GraphMatrix::removeEdge(vert v1, vert v2){
+void GraphMatrix::removeEdge(int v1, int v2){
     if(hasEdge(v1,v2)){
         adjMatrix[v1][v2]=false;
         numEdge--;
@@ -62,8 +61,8 @@ void GraphMatrix::removeEdge(vert v1, vert v2){
 }
 
 void GraphMatrix::printEdges(){
-    for (vert i=0; i<numVertex; i++){
-        for (vert j=0; j<numVertex; j++){
+    for (int i=0; i<numVertex; i++){
+        for (int j=0; j<numVertex; j++){
             if(hasEdge(i,j)){
                 std::cout<< "(" << i << "," << j << ")"<< std::endl;
             }
@@ -72,8 +71,8 @@ void GraphMatrix::printEdges(){
 }
 
 void GraphMatrix::printMatrix(){
-    for (vert i=0; i<numVertex; i++){
-        for (vert j=0; j<numVertex; j++){
+    for (int i=0; i<numVertex; i++){
+        for (int j=0; j<numVertex; j++){
             std::cout << hasEdge(i,j) << " ";
         }
         std::cout << std::endl;

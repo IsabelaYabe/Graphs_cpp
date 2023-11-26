@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/Isas_/.vscode/Graphs",
-      "program": "c:/Users/Isas_/.vscode/Graphs/build/Debug/outDebug",
+      "cwd": "c:/Users/Isas_/.vscode/Graphs_cpp",
+      "program": "c:/Users/Isas_/.vscode/Graphs_cpp/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
