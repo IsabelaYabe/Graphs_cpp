@@ -3,44 +3,71 @@
 
 using namespace std;
 
-int maxSomaDivisao(int arr[], int inicio, int meio, int fim) {
-    int somaAtual = 0;
-    int maxSomaEsquerda = INT_MIN;
-    for (int i = meio; i >= inicio; i--) {
-        somaAtual += arr[i];
-        if (somaAtual > maxSomaEsquerda) {
-            maxSomaEsquerda = somaAtual;
+int findNextAugmentingPath(int v0, int vf, int* parent, EdgeNode* parentEdge[]) {
+    // Inicializa um vetor de booleanos para rastrear os vértices visitados
+    bool visited[numVertices];
+    for (int v = 0; v < numVertices; v++) {
+        visited[v] = false;
+    }
+
+    // Inicializa uma fila para armazenar os vértices a serem processados
+    queue<int> queue;
+
+    // Marca o vértice de origem como visitado e o adiciona à fila
+    visited[v0] = true;
+    queue.push(v0);
+
+    // Enquanto a fila não estiver vazia
+    while (!queue.empty()) {
+        // Remove o primeiro elemento da fila (v)
+        int v = queue.front();
+        queue.pop();
+
+        // Se chegamos ao destino, saímos do loop
+        if (v == vf) {
+            break;
+        }
+
+        // Para cada aresta saindo do vértice v
+        EdgeNode* edge = edges[v];
+        while (edge) {
+            int residual = edge->capacity() - edge->flow();
+            int v2 = edge->getVertex();
+
+            // Se a aresta tem capacidade residual e o vértice adjacente não foi visitado
+            if (residual > 0 && !visited[v2]) {
+                // Marca o vértice adjacente como visitado
+                visited[v2] = true;
+
+                // Define o pai do vértice adjacente como v
+                parent[v2] = v;
+
+                // Define a aresta pai do vértice adjacente como a aresta atual
+                parentEdge[v2] = edge;
+
+                // Adiciona o vértice adjacente à fila para processamento futuro
+                queue.push(v2);
+            }
+
+            // Move para a próxima aresta saindo do vértice v
+            edge = edge->next();
         }
     }
 
-    somaAtual = 0;
-    int maxSomaDireita = INT_MIN;
-    for (int i = meio + 1; i <= fim; i++) {
-        somaAtual += arr[i];
-        if (somaAtual > maxSomaDireita) {
-            maxSomaDireita = somaAtual;
-        }
+    // Se o destino não foi visitado, não existe caminho de aumento
+    if (!visited[vf]) {
+        return 0;
     }
 
-    return maxSomaEsquerda + maxSomaDireita;
-}
-
-int maiorSeqDivisaoConquista(int arr[], int inicio, int fim) {
-    if (inicio == fim) {
-        return arr[inicio];
+    // Calcula a capacidade residual mínima ao longo do caminho encontrado
+    int delta = INT_MAX;
+    for (int v2 = vf; v2 != v0; v2 = parent[v2]) {
+        EdgeNode* edge = parentEdge[v2];
+        delta = min(delta, edge->capacity() - edge->flow());
     }
 
-    int meio = (inicio + fim) / 2;
-
-    // Calcula a maior soma de subsequência contígua nas partes esquerda e direita
-    int maxSomaEsquerda = maiorSeqDivisaoConquista(arr, inicio, meio);
-    int maxSomaDireita = maiorSeqDivisaoConquista(arr, meio + 1, fim);
-
-    // Calcula a maior soma que atravessa a divisão das partes esquerda e direita
-    int maxSomaAtravessa = maxSomaDivisao(arr, inicio, meio, fim);
-
-    // Retorna o máximo entre as três opções
-    return max(maxSomaEsquerda, max(maxSomaDireita, maxSomaAtravessa));
+    // Retorna a capacidade residual mínima ao longo do caminho
+    return delta;
 }
 
 int main() {
