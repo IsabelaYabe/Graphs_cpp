@@ -182,3 +182,36 @@
 //     cout << endl;
 //     return visited[j];
 // }
+
+// bool hasTopologicalOrder(GraphAdjList* G,int order[]) {
+// int inDegree[G->getNumVertex()];
+// for (int i = 0; i < G->getNumVertex(); i++) {
+//     inDegree[i] = 0;
+// }
+// for (int i = 0; i < G->getNumVertex(); i++) {
+//     for (EdgeNode* e = G->getEdges()[i]; e != nullptr; e = e->getNext()) {
+//     inDegree[e->getVertex()]++;
+//     }
+// }
+// int queue[G->getNumVertex()];
+// int start = 0;
+// int end = 0;
+// for (int i = 0; i < G->getNumVertex(); i++) {
+//     if (inDegree[i] == 0) {
+//         queue[end++] = i;
+//     }
+// }
+// int counter = 0;
+// while (start < end) {
+//     int v = queue[start++];
+//     order[v] = counter++;
+//     for (EdgeNode* e = G->getEdges()[v]; e != nullptr; e = e->getNext()) {
+//         int other = e->getVertex();
+//         inDegree[other]--;
+//         if (inDegree[other] == 0) {
+//             queue[end++] = other;
+//         }
+//     }
+// }
+// return counter >= G->getNumVertex();
+// }

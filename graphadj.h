@@ -19,6 +19,7 @@ public:
 private:
     int vertex;
     EdgeNode* next;
+    int weight;
 };
 
 class GraphAdjList{
